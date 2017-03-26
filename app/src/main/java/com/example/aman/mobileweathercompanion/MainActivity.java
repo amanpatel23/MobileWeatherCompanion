@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         String apiKey = "b06f99a656f3a1b1405dff109e42c4a5";
         double latitude = 39.3938;
-        double longitude = 76.6092;
+        double longitude = -76.6092;
         String forecastUrl = "https://api.darksky.net/forecast/" + apiKey + "/" + latitude + "," + longitude;
 
         if(isNetworkAvailable()) {
