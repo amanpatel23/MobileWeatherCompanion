@@ -90,8 +90,8 @@ public class CurrentWeather {
         return timeString;
     }
 
-    public double getmTemp() {
-        return mTemp;
+    public int getmTemp() {
+        return (int) Math.round(mTemp);
     }
 
     public void setmTemp(double mTemp) {

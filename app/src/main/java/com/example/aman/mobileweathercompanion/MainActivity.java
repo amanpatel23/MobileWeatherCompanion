@@ -1,6 +1,7 @@
 package com.example.aman.mobileweathercompanion;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -8,6 +9,8 @@ import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -15,6 +18,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -27,10 +32,15 @@ public class MainActivity extends AppCompatActivity {
 
     private CurrentWeather mCurrentWeather;
 
+    @BindView(R.id.time_label) TextView mTimeLabel;
+    @BindView(R.id.temp_label) TextView mTemperatureLabel;
+    @BindView(R.id.icon_imageView) ImageView mIconImageView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         String apiKey = "b06f99a656f3a1b1405dff109e42c4a5";
         double latitude = 39.3938;
@@ -56,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
                         Log.v(TAG, jsonData);
                         if (response.isSuccessful()) {
                             mCurrentWeather = getCurrentDetails(jsonData);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    updateDisplay();
+                                }
+                            });
 
                         } else {
                             alertUserAboutError();
@@ -77,6 +93,14 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "Main UI code is working");
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private void updateDisplay() {
+        mTimeLabel.setText(mCurrentWeather.getFormattedTime() + "");
+        mTemperatureLabel.setText(mCurrentWeather.getmTemp() + "");
+        Drawable drawable = getResources().getDrawable(mCurrentWeather.getIconId());
+        mIconImageView.setImageDrawable(drawable);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -116,6 +140,5 @@ public class MainActivity extends AppCompatActivity {
     private void alertUserAboutError() {
         AlertDialogFragment dialog = new AlertDialogFragment();
         dialog.show(getFragmentManager(), "error_dialog");
-
     }
 }
