@@ -79,4 +79,36 @@
         android:layout_alignTop="@+id/refresh_imageView"
         android:layout_centerHorizontal="true" />
 
+    <EditText
+        android:id="@+id/editLong"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/editLat"
+        android:layout_alignStart="@+id/editLat"
+        android:layout_below="@+id/editLat"
+        android:ems="10"
+        android:inputType="text"
+        android:text="Long" />
+
+    <EditText
+        android:id="@+id/editLat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/time_label"
+        android:layout_marginTop="60dp"
+        android:layout_toLeftOf="@+id/degree_imageView"
+        android:layout_toStartOf="@+id/degree_imageView"
+        android:ems="10"
+        android:inputType="text"
+        android:text="Lat" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/progressBar"
+        android:layout_alignLeft="@+id/editLong"
+        android:layout_alignStart="@+id/editLong"
+        android:text="Button" />
+
 </RelativeLayout>

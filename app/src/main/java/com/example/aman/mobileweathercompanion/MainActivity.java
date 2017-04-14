@@ -10,6 +10,7 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -28,6 +29,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static android.widget.ImageView.*;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
@@ -39,6 +42,9 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.icon_imageView) ImageView mIconImageView;
     @BindView(R.id.refresh_imageView) ImageView mRefreshImageView;
     @BindView(R.id.progressBar) ProgressBar mProgressBar;
+    @BindView(R.id.editLat) TextView meditLat;
+    @BindView(R.id.editLong) TextView meditLong;
+    @BindView(R.id.button) Button mbButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +64,29 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         getForecast(latitude,longitude);
+
+        mbButton.setOnClickListener(new OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                String longin = meditLong.getText().toString();
+                longin = longin.replace(" ", "");
+                String latin =  meditLat.getText().toString();
+                latin = latin.replace(" ", "");
+                System.out.println(longin+" ........ "+latin);
+             getForecast(Double.parseDouble(latin), Double.parseDouble(longin));
+            }
+        });
 
         Log.d(TAG, "Main UI code is working");
 
+    }
+    public void setDb (double latitude, double longitude){
+        LongLatDB db = new LongLatDB(this, null, null, 1);
+        LongLat temp = new LongLat(longitude, latitude);
+        db.addCord(temp);
+        db.toString();
     }
 
     private void getForecast(double latitude, double longitude) {
