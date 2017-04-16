@@ -1,10 +1,12 @@
-package com.example.aman.mobileweathercompanion;
+package com.example.aman.mobileweathercompanion.UI;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.os.Bundle;
+
+import com.example.aman.mobileweathercompanion.R;
 
 /**
  * Created by Aman on 3/25/17.

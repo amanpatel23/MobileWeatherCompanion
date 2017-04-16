@@ -1,14 +1,14 @@
-package com.example.aman.mobileweathercompanion;
+package com.example.aman.mobileweathercompanion.data;
 
 /**
  * Created by colep on 4/10/2017.
  */
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.database.Cursor;
-import android.content.Context;
-import android.content.ContentValues;
 
 public class LongLatDB extends SQLiteOpenHelper{
     private static final int DATABASE_VERSION = 1;

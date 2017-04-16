@@ -1,4 +1,4 @@
-package com.example.aman.mobileweathercompanion;
+package com.example.aman.mobileweathercompanion.data;
 
 /**
  * Created by colep on 4/10/2017.

@@ -1,9 +1,11 @@
-package com.example.aman.mobileweathercompanion;
+package com.example.aman.mobileweathercompanion.weather;
 
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.TimeZone;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+
+import com.example.aman.mobileweathercompanion.R;
 
 import java.util.Date;
 
