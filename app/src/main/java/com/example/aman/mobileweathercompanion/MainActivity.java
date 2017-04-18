@@ -1,7 +1,10 @@
 package com.example.aman.mobileweathercompanion;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -16,70 +19,90 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.aman.mobileweathercompanion.UI.AlertDialogFragment;
+import com.example.aman.mobileweathercompanion.data.LongLat;
+import com.example.aman.mobileweathercompanion.data.LongLatDB;
+import com.example.aman.mobileweathercompanion.weather.CurrentWeather;
+import com.example.aman.mobileweathercompanion.weather.Day;
+import com.example.aman.mobileweathercompanion.weather.Forecast;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-import static android.widget.ImageView.*;
+import static android.widget.ImageView.OnClickListener;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
-
-    private CurrentWeather mCurrentWeather;
+    public static final String DAILY_FORECAST = "DAILY_FORECAST";
+    private Forecast mForecast;
 
     @BindView(R.id.time_label) TextView mTimeLabel;
     @BindView(R.id.temp_label) TextView mTemperatureLabel;
+    @BindView(R.id.location_label) TextView mLocationLabel;
     @BindView(R.id.icon_imageView) ImageView mIconImageView;
     @BindView(R.id.refresh_imageView) ImageView mRefreshImageView;
     @BindView(R.id.progressBar) ProgressBar mProgressBar;
-    @BindView(R.id.editLat) TextView meditLat;
-    @BindView(R.id.editLong) TextView meditLong;
-    @BindView(R.id.button) Button mbButton;
+    @BindView(R.id.editZip) TextView meditZip;
+    @BindView(R.id.button2) Button zipButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
+        final Geocoder geocoder = new Geocoder(this);
         mProgressBar.setVisibility(View.INVISIBLE);
 
-        final double latitude = 39.3938;
-        final double longitude = -76.6092;
+        final double[] latitude = {39.3938};
+        final double[] longitude = {-76.6092};
+
+        getForecast(latitude[0],longitude[0]);
 
         mRefreshImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getForecast(latitude,longitude);
+                getForecast(latitude[0],longitude[0]);
             }
         });
 
 
-        getForecast(latitude,longitude);
+        zipButton.setOnClickListener(new OnClickListener() {
 
-        mbButton.setOnClickListener(new OnClickListener(){
             @Override
             public void onClick(View v) {
-                String longin = meditLong.getText().toString();
-                longin = longin.replace(" ", "");
-                String latin =  meditLat.getText().toString();
-                latin = latin.replace(" ", "");
-                System.out.println(longin+" ........ "+latin);
-             getForecast(Double.parseDouble(latin), Double.parseDouble(longin));
-            }
-        });
+                final String zip = meditZip.getText().toString();
 
-        Log.d(TAG, "Main UI code is working");
+                try {
+                    List<Address> addresses = geocoder.getFromLocationName(zip, 1);
+                    if (addresses != null && !addresses.isEmpty()) {
+                        Address address = addresses.get(0);
+                        String message = String.format("Latitude: %f, Longitude: %f",
+                                address.getLatitude(), address.getLongitude());
+                        latitude[0] = address.getLatitude();
+                        longitude[0] = address.getLongitude();
+                        getForecast(address.getLatitude(),address.getLongitude());
+                        mLocationLabel.setText(addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
+                    }
+                } catch (IOException e) {
+
+                }
+            }
+
+        });
 
     }
     public void setDb (double latitude, double longitude){
@@ -125,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
                         String jsonData = response.body().string();
                         Log.v(TAG, jsonData);
                         if (response.isSuccessful()) {
-                            mCurrentWeather = getCurrentDetails(jsonData);
+                            mForecast = parseForecastDetails(jsonData);
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -164,12 +187,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     private void updateDisplay() {
-        mTimeLabel.setText(mCurrentWeather.getFormattedTime() + "");
-        mTemperatureLabel.setText(mCurrentWeather.getmTemp() + "");
-        Drawable drawable = getResources().getDrawable(mCurrentWeather.getIconId());
+        CurrentWeather current = mForecast.getCurrentWeather();
+        mTimeLabel.setText(current.getFormattedTime() + "");
+        mTemperatureLabel.setText(current.getmTemp() + "");
+        Drawable drawable = getResources().getDrawable(current.getIconId());
         mIconImageView.setImageDrawable(drawable);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private Forecast parseForecastDetails(String jsonData)throws JSONException{
+        Forecast forecast = new Forecast();
+
+        forecast.setCurrentWeather(getCurrentDetails(jsonData));
+        forecast.setDailyForecast(getDailyForecast(jsonData));
+        return forecast;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -194,6 +228,32 @@ public class MainActivity extends AppCompatActivity {
         return currentWeather;
     }
 
+
+    private Day[] getDailyForecast(String jsonData)throws JSONException {
+        JSONObject forecast = new JSONObject(jsonData);
+        String timezone = forecast.getString("timezone");
+        JSONObject daily = forecast.getJSONObject("daily");
+        JSONArray data = daily.getJSONArray("data");
+
+        Day[] days = new Day[data.length()];
+
+        for (int i = 0; i < data.length(); i++) {
+            JSONObject jsonDay = data.getJSONObject(i);
+            Day day = new Day();
+
+            day.setSummary(jsonDay.getString("summary"));
+            day.setIcon(jsonDay.getString("icon"));
+            day.setTemperatureMax(jsonDay.getDouble("temperatureMax"));
+            day.setTime(jsonDay.getLong("time"));
+            day.setTimezone(timezone);
+
+            days[i] = day;
+
+
+        }
+        return days;
+    }
+
     private boolean isNetworkAvailable() {
         ConnectivityManager manager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
@@ -210,4 +270,13 @@ public class MainActivity extends AppCompatActivity {
         AlertDialogFragment dialog = new AlertDialogFragment();
         dialog.show(getFragmentManager(), "error_dialog");
     }
+
+    @OnClick(R.id.dailyButton)
+    public void startDailyActivity(View view){
+        Intent intent = new Intent(this,DailyForecastActivity.class);
+        intent.putExtra(DAILY_FORECAST, mForecast.getDailyForecast());
+        startActivity(intent);
+    }
+
+
 }

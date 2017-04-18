@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginTop="5dp"
+    card_view:cardBackgroundColor="@color/colorPrimaryDark"
+    card_view:cardCornerRadius="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:id="@+id/weather_icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            card_view:srcCompat="@drawable/clear_day" />
+
+        <TextView
+            android:id="@+id/day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/weather_icon"
+            android:paddingLeft="10dp"
+            android:text="Day"
+            android:textColor="@color/cardview_light_background"
+            tools:textColor="@android:color/background_light" />
+
+
+        <TextView
+            android:id="@+id/temp_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/day"
+            android:layout_toRightOf="@id/weather_icon"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:text="Max"
+            android:textColor="@color/cardview_light_background" />
+
+        <TextView
+            android:id="@+id/summary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/temp_label"
+            android:layout_toRightOf="@id/weather_icon"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:text="Summary"
+            android:textColor="@android:color/background_light" />
+
+    </RelativeLayout>
+
+
+</android.support.v7.widget.CardView>
