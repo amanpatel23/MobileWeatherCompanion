@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.database.Cursor;
 import android.content.Context;
 import android.content.ContentValues;
+import java.util.ArrayList;
 
 public class LongLatDB extends SQLiteOpenHelper{
     private static final int DATABASE_VERSION = 1;
@@ -54,6 +55,82 @@ public class LongLatDB extends SQLiteOpenHelper{
         db.execSQL("DELETE FROM " + TABLE_CORDS + " WHERE " + COLUMN_LONG + "=\"" + longi + "\";");
     }
 
+    public LongLat getTopData(){
+        LongLat temp = new LongLat();
+        String lon = "";
+        String lat = "";
+        SQLiteDatabase db = getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_CORDS + " WHERE 1";// why not leave out the WHERE  clause?
+        Cursor recordSet = db.rawQuery(query, null);
+        recordSet.moveToFirst();
+       /* while (!recordSet.isAfterLast()) {
+            // null could happen if we used our empty constructor
+            if (recordSet.getString(recordSet.getColumnIndex("Longitude")) != null) {
+                lon = recordSet.getString(recordSet.getColumnIndex("Longitude"));
+                lat += recordSet.getString(recordSet.getColumnIndex("Latitude"));
+            }
+            recordSet.moveToNext();
+        }*/
+        if (!recordSet.isAfterLast()) {
+            if (recordSet.getString(recordSet.getColumnIndex("Longitude")) != null) {
+                lon = recordSet.getString(recordSet.getColumnIndex("Longitude"));
+                lat += recordSet.getString(recordSet.getColumnIndex("Latitude"));
+            } else {
+                System.out.println("I messed up going back to Towson");
+                lon = "-76.6092";
+                lat = "39.3938";
+
+            }
+        }
+        db.close();
+        temp.setLongitude(Double.parseDouble(lon));
+        temp.setLatitude(Double.parseDouble(lat));
+        return temp;
+    }
+
+    public ArrayList <LongLat> getData(){
+        LongLat temp = new LongLat();
+        ArrayList <LongLat> re = new ArrayList<LongLat>();
+        String lon = "";
+        String lat = "";
+        SQLiteDatabase db = getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_CORDS + " WHERE 1";// why not leave out the WHERE  clause?
+        Cursor recordSet = db.rawQuery(query, null);
+        recordSet.moveToFirst();
+       while (!recordSet.isAfterLast()) {
+            if (recordSet.getString(recordSet.getColumnIndex("Longitude")) != null) {
+                lon = recordSet.getString(recordSet.getColumnIndex("Longitude"));
+                lat = recordSet.getString(recordSet.getColumnIndex("Latitude"));
+                System.out.println("getData: "+lon+" ppp "+lat);
+                try {
+                    temp = new LongLat(Double.parseDouble(lon), Double.parseDouble(lat));
+                    re.add(temp);
+                }
+                catch (Exception e){
+
+                }
+            }
+            recordSet.moveToNext();
+        }
+        /*if (!recordSet.isAfterLast()) {
+            if (recordSet.getString(recordSet.getColumnIndex("Longitude")) != null) {
+                lon = recordSet.getString(recordSet.getColumnIndex("Longitude"));
+                lat += recordSet.getString(recordSet.getColumnIndex("Latitude"));
+            } else {
+                System.out.println("I messed up going back to Towson");
+                lon = "-76.6092";
+                lat = "39.3938";
+
+            }
+        }
+        db.close();
+        temp.setLongitude(Double.parseDouble(lon));
+        temp.setLatitude(Double.parseDouble(lat));
+        return temp;*/
+        db.close();
+        return re;
+    }
+
     // this is goint in record_TextView in the Main activity.
     public String databaseToString(){
         String dbString = "";
@@ -69,7 +146,7 @@ public class LongLatDB extends SQLiteOpenHelper{
         while (!recordSet.isAfterLast()) {
             // null could happen if we used our empty constructor
             if (recordSet.getString(recordSet.getColumnIndex("Longitude")) != null) {
-                dbString += recordSet.getString(recordSet.getColumnIndex("Longitude"));
+                dbString += recordSet.getString(recordSet.getColumnIndex("Longitude"))+", ";
                 dbString += recordSet.getString(recordSet.getColumnIndex("Latitude"));
                 dbString += "\n";
             }
