@@ -105,6 +105,7 @@ public class LongLatDB extends SQLiteOpenHelper{
                 try {
                     temp = new LongLat(Double.parseDouble(lon), Double.parseDouble(lat));
                     re.add(temp);
+
                 }
                 catch (Exception e){
 
