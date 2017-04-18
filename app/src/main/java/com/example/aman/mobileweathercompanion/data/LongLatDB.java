@@ -160,6 +160,7 @@ public class LongLatDB extends SQLiteOpenHelper{
             recordSet.moveToNext();
         }
         db.close();
+
         return dbString;
     }
 
