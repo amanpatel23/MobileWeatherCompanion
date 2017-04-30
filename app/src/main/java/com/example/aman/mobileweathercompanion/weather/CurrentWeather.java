@@ -35,37 +35,38 @@ public class CurrentWeather {
     }
 
     public int getIconId() {
-        int iconId = R.drawable.clear_day;
+        int iconId = R.drawable.ic_day;
 
         if(mIcon.equals("clear-day")){
-            iconId = R.drawable.clear_day;
+            iconId = R.drawable.ic_day;
         }
         else if(mIcon .equals("clear-night")){
-            iconId = R.drawable.clear_night;
+            iconId = R.drawable.ic_night;
         }
+
         else if (mIcon.equals("rain")) {
-            iconId = R.drawable.rain;
+            iconId = R.drawable.ic_rainy;
         }
         else if (mIcon.equals("snow")) {
-            iconId = R.drawable.snow;
+            iconId = R.drawable.ic_snowy;
         }
         else if (mIcon.equals("sleet")) {
-            iconId = R.drawable.sleet;
+            iconId = R.drawable.ic_snowy;
         }
         else if (mIcon.equals("wind")) {
-            iconId = R.drawable.wind;
+            iconId = R.drawable.ic_day;
         }
         else if (mIcon.equals("fog")) {
-            iconId = R.drawable.fog;
+            iconId = R.drawable.ic_cloudy;
         }
         else if (mIcon.equals("cloudy")) {
-            iconId = R.drawable.cloudy;
+            iconId = R.drawable.ic_cloudy;
         }
         else if (mIcon.equals("partly-cloudy-day")) {
-            iconId = R.drawable.partly_cloudy;
+            iconId = R.drawable.ic_cloudyday;
         }
         else if (mIcon.equals("partly-cloudy-night")) {
-            iconId = R.drawable.cloudy_night;
+            iconId = R.drawable.ic_cloudynight;
         }
 
         return iconId;

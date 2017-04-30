@@ -6,6 +6,7 @@ import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.RelativeLayout;
 
 import com.example.aman.mobileweathercompanion.weather.Day;
 
@@ -22,12 +23,14 @@ public class DailyForecastActivity extends AppCompatActivity {
     private Day[] mDays;
 
     @BindView(R.id.reyclerView) RecyclerView mRecyclerView;
+    @BindView(R.id.rView) RelativeLayout rLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.daily_forecast);
         ButterKnife.bind(this);
+
 
         Intent intent = getIntent();
         Parcelable[] parcelables = intent.getParcelableArrayExtra(MainActivity.DAILY_FORECAST);

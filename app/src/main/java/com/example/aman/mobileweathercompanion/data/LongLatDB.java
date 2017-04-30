@@ -9,13 +9,10 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-<<<<<<< HEAD:app/src/main/java/com/example/aman/mobileweathercompanion/LongLatDB.java
-import android.database.Cursor;
-import android.content.Context;
-import android.content.ContentValues;
+
 import java.util.ArrayList;
-=======
-        >>>>>>> origin/master:app/src/main/java/com/example/aman/mobileweathercompanion/data/LongLatDB.java
+
+
 
 public class LongLatDB extends SQLiteOpenHelper{
     private static final int DATABASE_VERSION = 1;

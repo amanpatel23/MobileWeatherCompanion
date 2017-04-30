@@ -61,7 +61,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder>{
         public void bindDay(Day day){
             mDayLabel.setText(day.getDayOfTheWeek());
             mSummaryLabel.setText(day.getSummary()+ "");
-            mTemperatureLabel.setText(day.getTemperatureMax() + " degrees");
+            mTemperatureLabel.setText(day.getTemperatureMin() + " - " + day.getTemperatureMax() + " degrees");
             mIconImageView.setImageResource(day.getIconId());
 
 

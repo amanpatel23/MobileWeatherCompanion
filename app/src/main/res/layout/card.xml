@@ -7,7 +7,7 @@
     android:layout_marginLeft="5dp"
     android:layout_marginRight="5dp"
     android:layout_marginTop="5dp"
-    card_view:cardBackgroundColor="@color/colorPrimaryDark"
+    card_view:cardBackgroundColor="@android:color/transparent"
     card_view:cardCornerRadius="5dp">
 
     <RelativeLayout
@@ -40,6 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/day"
             android:layout_toRightOf="@id/weather_icon"
+            android:foregroundGravity="center_horizontal"
             android:paddingLeft="10dp"
             android:paddingTop="10dp"
             android:text="Max"

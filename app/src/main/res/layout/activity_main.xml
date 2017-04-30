@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_blue_dark"
+    android:background="@drawable/warm"
+    android:id = "@+id/rLayout"
     tools:context="com.example.aman.mobileweathercompanion.MainActivity"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="0dp">
@@ -37,10 +38,11 @@
         android:id="@+id/time_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:text="5:00 PM"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:layout_below="@+id/summary_label"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="22dp" />
 
     <TextView
         android:id="@+id/location_label"
@@ -54,12 +56,14 @@
 
     <ImageView
         android:id="@+id/icon_imageView"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        app:srcCompat="@drawable/clear_day"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="53dp"
-        app:srcCompat="@drawable/clear_day" />
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/location_label" />
 
     <ImageView
         android:id="@+id/refresh_imageView"
@@ -76,12 +80,12 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/refresh_imageView"
         android:layout_alignLeft="@+id/editZip"
         android:layout_alignStart="@+id/editZip"
-        android:layout_below="@+id/editZip"
         android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp" />
+        android:layout_marginStart="16dp"
+        android:layout_alignBottom="@+id/refresh_imageView"
+        android:layout_below="@+id/editZip" />
 
     <EditText
         android:id="@+id/editZip"
@@ -93,7 +97,7 @@
         android:layout_toStartOf="@+id/degree_imageView"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Enter Zip Code" />
+        android:hint="Enter Location" />
 
     <Button
         android:id="@+id/button2"
@@ -102,7 +106,7 @@
         android:layout_alignBottom="@+id/editZip"
         android:layout_toEndOf="@+id/temp_label"
         android:layout_toRightOf="@+id/temp_label"
-        android:text="Button" />
+        android:text="Change" />
 
     <Button
         android:id="@+id/dailyButton"
@@ -112,5 +116,25 @@
         android:layout_alignLeft="@+id/button2"
         android:layout_alignStart="@+id/button2"
         android:text="7 Day" />
+
+    <TextView
+        android:id="@+id/summary_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/temp_label"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11dp"
+        android:text="Clear"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/percipChance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="50%"
+        android:textSize="20sp" />
 
 </RelativeLayout>

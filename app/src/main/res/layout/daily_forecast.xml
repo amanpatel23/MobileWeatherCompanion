@@ -3,13 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_blue_dark"
+    android:id = "@+id/rView"
+    android:background="@drawable/vice"
     tools:context=".DailyForecastActivity"
     android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/reyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        />
 
 </RelativeLayout>

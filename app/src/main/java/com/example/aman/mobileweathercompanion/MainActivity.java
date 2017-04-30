@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+import static android.view.View.INVISIBLE;
 import static android.widget.ImageView.OnClickListener;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,14 +52,17 @@ public class MainActivity extends AppCompatActivity {
     public static final String DAILY_FORECAST = "DAILY_FORECAST";
     private Forecast mForecast;
 
+    @BindView(R.id.rLayout) RelativeLayout relativeLayout;
     @BindView(R.id.time_label) TextView mTimeLabel;
     @BindView(R.id.temp_label) TextView mTemperatureLabel;
     @BindView(R.id.location_label) TextView mLocationLabel;
+    @BindView(R.id.summary_label) TextView mSummaryLabel;
     @BindView(R.id.icon_imageView) ImageView mIconImageView;
     @BindView(R.id.refresh_imageView) ImageView mRefreshImageView;
     @BindView(R.id.progressBar) ProgressBar mProgressBar;
     @BindView(R.id.editZip) TextView meditZip;
     @BindView(R.id.button2) Button zipButton;
+    @BindView(R.id.percipChance) TextView mPercipChance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         final Geocoder geocoder = new Geocoder(this);
         mProgressBar.setVisibility(View.INVISIBLE);
+        mPercipChance.setVisibility(View.INVISIBLE);
+        final boolean[] farenheight = {true};
+        final boolean[] celcius = {false};
 
         final double[] latitude = {39.3938};
         final double[] longitude = {-76.6092};
@@ -102,6 +110,38 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+        });
+
+        mSummaryLabel.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mPercipChance.getVisibility() == INVISIBLE) {
+                    mPercipChance.setVisibility(View.VISIBLE);
+                }
+                else {
+                    mPercipChance.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+
+        mTemperatureLabel.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (farenheight[0] == true && celcius[0] == false) {
+                    CurrentWeather current = mForecast.getCurrentWeather();
+                    int f = current.getmTemp();
+                    int c = ((f - 32) * 5) / 9;
+                    mTemperatureLabel.setText(c + "");
+                    celcius[0] = true;
+                    farenheight[0] = false;
+                }
+                else if(farenheight[0] == false && celcius[0] == true) {
+                    CurrentWeather current = mForecast.getCurrentWeather();
+                    mTemperatureLabel.setText(current.getmTemp() + "");
+                    celcius[0] = false;
+                    farenheight[0] = true;
+                }
+            }
         });
 
     }
@@ -193,8 +233,20 @@ public class MainActivity extends AppCompatActivity {
         CurrentWeather current = mForecast.getCurrentWeather();
         mTimeLabel.setText(current.getFormattedTime() + "");
         mTemperatureLabel.setText(current.getmTemp() + "");
+        mSummaryLabel.setText(current.getmSummary() + "");
+        mPercipChance.setText(Math.round(current.getmPrecipChance()) + "% Chance of Precipitation");
         Drawable drawable = getResources().getDrawable(current.getIconId());
         mIconImageView.setImageDrawable(drawable);
+
+        if(current.getmTemp() > 76) {
+            relativeLayout.setBackground(getResources().getDrawable(R.drawable.hot));
+        }
+        else if(current.getmTemp() > 60 && current.getmTemp() <= 76) {
+            relativeLayout.setBackground(getResources().getDrawable(R.drawable.warm));
+        }
+        else {
+            relativeLayout.setBackground(getResources().getDrawable(R.drawable.cold));
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -243,6 +295,7 @@ public class MainActivity extends AppCompatActivity {
 
             day.setSummary(jsonDay.getString("summary"));
             day.setIcon(jsonDay.getString("icon"));
+            day.setTemperatureMin(jsonDay.getDouble("temperatureMin"));
             day.setTemperatureMax(jsonDay.getDouble("temperatureMax"));
             day.setTime(jsonDay.getLong("time"));
             day.setTimezone(timezone);
