@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class LongLatDB extends SQLiteOpenHelper{
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "LongLat.db";
-    public static final String TABLE_CORDS = "Cordinates";
+    public static final String TABLE_CORDS = "Coordinates";
     public static final String COLUMN_ID = "_id";
     public static final String COLUMN_LONG = "Longitude";
     public static final String COLUMN_LAT = "Latitude";
