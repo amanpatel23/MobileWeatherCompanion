@@ -1,70 +1,64 @@
 package com.example.aman.mobileweathercompanion.data;
 
-/**
- * Created by colep on 4/10/2017.
- */
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-//<<<<<<< HEAD:app/src/main/java/com/example/aman/mobileweathercompanion/LongLatDB.java
-import android.database.Cursor;
-import android.content.Context;
-import android.content.ContentValues;
+
 import java.util.ArrayList;
 
-public class LongLatDB extends SQLiteOpenHelper{
+/**
+ * Created by colep on 4/24/2017.
+ */
+
+public class ZipDb extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "LongLat.db";
-    public static final String TABLE_CORDS = "Cordinates";
+    private static final String DATABASE_NAME = "Zip.db";
+    public static final String TABLE_ZIPS = "Cordinates";
     public static final String COLUMN_ID = "_id";
-    public static final String COLUMN_LONG = "Longitude";
-    public static final String COLUMN_LAT = "Latitude";
+    public static final String COLUMN_ZIP = "zip";;
 
     //We need to pass database information along to superclass
-    public LongLatDB(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
+    public ZipDb(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
         super(context, DATABASE_NAME, factory, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String query = "CREATE TABLE " + TABLE_CORDS + "(" +
+        String query = "CREATE TABLE " + TABLE_ZIPS + "(" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_LONG +" TEXT, "+ COLUMN_LAT+ " TEXT " +
+                COLUMN_ZIP +" TEXT " +
                 ");";
         db.execSQL(query);
     }
     //
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CORDS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ZIPS);
         onCreate(db);
     }
 
     //Add a new row to the database
-    public void addCord(LongLat longlats){
+    public void addCord(Zip zip){
         ContentValues values = new ContentValues();
-        values.put(COLUMN_LONG, longlats.getLongitude());
-        values.put(COLUMN_LAT, longlats.getLatitude());
+        values.put(COLUMN_ZIP, zip.getZipString());
         SQLiteDatabase db = getWritableDatabase();
-        db.insert(TABLE_CORDS, null, values);
+        db.insert(TABLE_ZIPS, null, values);
         db.close();
     }
 
     //Delete a product from the database
     public void deleteCord(String longi){
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL("DELETE FROM " + TABLE_CORDS + " WHERE " + COLUMN_LONG + "=\"" + longi + "\";");
+        db.execSQL("DELETE FROM " + TABLE_ZIPS + " WHERE " + COLUMN_ZIP + "=\"" + longi + "\";");
     }
 
-    public LongLat getTopData(){
-        LongLat temp = new LongLat();
-        String lon = "";
-        String lat = "";
+    public Zip getTopData(){
+        Zip temp = new Zip();
+        String zip = "";
         SQLiteDatabase db = getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_CORDS + " WHERE 1";// why not leave out the WHERE  clause?
+        String query = "SELECT * FROM " + TABLE_ZIPS + " WHERE 1";// why not leave out the WHERE  clause?
         Cursor recordSet = db.rawQuery(query, null);
         recordSet.moveToFirst();
        /* while (!recordSet.isAfterLast()) {
@@ -76,39 +70,44 @@ public class LongLatDB extends SQLiteOpenHelper{
             recordSet.moveToNext();
         }*/
         if (!recordSet.isAfterLast()) {
-            if (recordSet.getString(recordSet.getColumnIndex("Longitude")) != null) {
-                lon = recordSet.getString(recordSet.getColumnIndex("Longitude"));
-                lat = recordSet.getString(recordSet.getColumnIndex("Latitude"));
+            if (recordSet.getString(recordSet.getColumnIndex("zip")) != null) {
+                zip = recordSet.getString(recordSet.getColumnIndex("zip"));
             } else {
-                System.out.println("I messed up going back to Towson");
-                lon = "-76.6092";
-                lat = "39.3938";
+
 
             }
         }
         db.close();
-        temp.setLongitude(Double.parseDouble(lon));
-        temp.setLatitude(Double.parseDouble(lat));
+        temp = new Zip(zip);
         return temp;
     }
 
-    public ArrayList <LongLat> getData(){
-        LongLat temp = new LongLat();
-        ArrayList <LongLat> re = new ArrayList<LongLat>();
-        String lon = "";
-        String lat = "";
+    public ArrayList<Zip> getData(){
+        Zip temp = new Zip();
+        ArrayList <Zip> re = new ArrayList<Zip>();
+        String Zip = "";
         SQLiteDatabase db = getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_CORDS + " WHERE 1";// why not leave out the WHERE  clause?
-        Cursor recordSet = db.rawQuery(query, null);
-        recordSet.moveToFirst();
+        String query = "SELECT * FROM " + TABLE_ZIPS + " WHERE 1";// why not leave out the WHERE  clause?
+        Cursor recordSet = null;
+        try{
+            recordSet = db.rawQuery(query, null);
+            recordSet.moveToFirst();
+        }
+        catch (Exception e){
+            String query2 = "CREATE TABLE " + TABLE_ZIPS + "(" +
+                    COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    COLUMN_ZIP +" TEXT " +
+                    ");";
+            db.execSQL(query2);
+
+        }
+
         while (!recordSet.isAfterLast()) {
-            if (recordSet.getString(recordSet.getColumnIndex("Longitude")) != null) {
-                lon = recordSet.getString(recordSet.getColumnIndex("Longitude"));
-                lat = recordSet.getString(recordSet.getColumnIndex("Latitude"));
-                System.out.println("getData: "+lon+" ppp "+lat);
+            if (recordSet.getString(recordSet.getColumnIndex("zip")) != null) {
+                Zip = recordSet.getString(recordSet.getColumnIndex("zip"));
                 try {
-                    temp = new LongLat(Double.parseDouble(lon), Double.parseDouble(lat));
-                    if(!(contains(re, temp))) {
+                    temp = new Zip(Zip);
+                    if(!(contains2(re, temp))) {
                         re.add(temp);
                     }
 
@@ -147,11 +146,20 @@ public class LongLatDB extends SQLiteOpenHelper{
         return false;
     }
 
+    boolean contains2(ArrayList<Zip> list, Zip temp) {
+        for (Zip item : list) {
+            if (item.equals(temp)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // this is goint in record_TextView in the Main activity.
     public String databaseToString(){
         String dbString = "";
         SQLiteDatabase db = getWritableDatabase();
-        String query = "SELECT * FROM " + TABLE_CORDS + " WHERE 1";// why not leave out the WHERE  clause?
+        String query = "SELECT * FROM " + TABLE_ZIPS + " WHERE 1";// why not leave out the WHERE  clause?
 
         //Cursor points to a location in your results
         Cursor recordSet = db.rawQuery(query, null);

@@ -23,6 +23,8 @@ import android.widget.Toast;
 import com.example.aman.mobileweathercompanion.UI.AlertDialogFragment;
 import com.example.aman.mobileweathercompanion.data.LongLat;
 import com.example.aman.mobileweathercompanion.data.LongLatDB;
+import com.example.aman.mobileweathercompanion.data.Zip;
+import com.example.aman.mobileweathercompanion.data.ZipDb;
 import com.example.aman.mobileweathercompanion.weather.CurrentWeather;
 import com.example.aman.mobileweathercompanion.weather.Day;
 import com.example.aman.mobileweathercompanion.weather.Forecast;
@@ -32,6 +34,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -80,6 +83,26 @@ public class MainActivity extends AppCompatActivity {
 
         getForecast(latitude[0],longitude[0]);
 
+        ArrayList<LongLat> myData = new ArrayList<LongLat>();
+        ArrayList<Zip> myData2 = new ArrayList<Zip>();
+        myData = getData();
+        myData2 = getData2();
+        int myData2num = myData2.size()-1;
+
+        try{
+            getForecast((myData.get(myData.size()-1).getLongitude()),(myData.get(myData.size()-1)).getLatitude());
+        }
+        catch (Exception e){
+
+        }
+        try {
+            getZipForecast(myData2.get(myData2num).getZipString());
+
+        }
+        catch(Exception e){
+
+        }
+
         mRefreshImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
                         longitude[0] = address.getLongitude();
                         getForecast(address.getLatitude(),address.getLongitude());
                         mLocationLabel.setText(addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
+                        setDb2(zip);
                     }
                 } catch (IOException e) {
 
@@ -149,7 +173,50 @@ public class MainActivity extends AppCompatActivity {
         LongLatDB db = new LongLatDB(this, null, null, 1);
         LongLat temp = new LongLat(longitude, latitude);
         db.addCord(temp);
-        db.toString();
+    }
+
+    public void setDb2 (String zip){
+        ZipDb db = new ZipDb(this, null, null, 1);
+        Zip temp = new Zip(zip);
+        db.addCord(temp);
+    }
+
+    public ArrayList<LongLat> getData(){
+        LongLatDB db = new LongLatDB(this, null, null, 1);
+        ArrayList <LongLat> da = new ArrayList<LongLat>();
+        da = db.getData();
+
+        return da;
+    }
+
+    public ArrayList <Zip> getData2(){
+        ZipDb db = new ZipDb(this, null, null, 1);
+        ArrayList <Zip> da = new ArrayList<Zip>();
+        da = db.getData();
+
+        return da;
+    }
+
+    public void getZipForecast(String zip){
+        final Geocoder geocoder = new Geocoder(this);
+
+        final double[] latitude = {39.3938};
+        final double[] longitude = {-76.6092};
+
+        try {
+            List<Address> addresses = geocoder.getFromLocationName(zip, 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                Address address = addresses.get(0);
+                String message = String.format("Latitude: %f, Longitude: %f",
+                        address.getLatitude(), address.getLongitude());
+                latitude[0] = address.getLatitude();
+                longitude[0] = address.getLongitude();
+                getForecast(address.getLatitude(),address.getLongitude());
+                mLocationLabel.setText(addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
+            }
+        } catch (IOException e) {
+
+        }
     }
 
     private void getForecast(double latitude, double longitude) {
