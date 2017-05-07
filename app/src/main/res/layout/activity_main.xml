@@ -137,4 +137,15 @@
         android:text="50%"
         android:textSize="20sp" />
 
+    <Button
+        android:id="@+id/currentWeather"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/dailyButton"
+        android:layout_alignBottom="@+id/dailyButton"
+        android:layout_alignEnd="@+id/location_label"
+        android:layout_alignRight="@+id/location_label"
+        android:text="Current Location"
+        tools:text="Current Location" />
+
 </RelativeLayout>

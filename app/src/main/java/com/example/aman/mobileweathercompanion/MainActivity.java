@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.aman.mobileweathercompanion.UI.AlertDialogFragment;
+import com.example.aman.mobileweathercompanion.data.CurrentLocation;
 import com.example.aman.mobileweathercompanion.data.LongLat;
 import com.example.aman.mobileweathercompanion.data.LongLatDB;
 import com.example.aman.mobileweathercompanion.data.Zip;
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
     public static final String DAILY_FORECAST = "DAILY_FORECAST";
     private Forecast mForecast;
+    private CurrentLocation myLoc;
 
     @BindView(R.id.rLayout) RelativeLayout relativeLayout;
     @BindView(R.id.time_label) TextView mTimeLabel;
@@ -66,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.editZip) TextView meditZip;
     @BindView(R.id.button2) Button zipButton;
     @BindView(R.id.percipChance) TextView mPercipChance;
+    @BindView(R.id.currentWeather) Button mCurrentWeather;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,7 +109,39 @@ public class MainActivity extends AppCompatActivity {
         mRefreshImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getForecast(latitude[0],longitude[0]);
+                //getForecast(latitude[0],longitude[0]);
+                ArrayList<Zip> myData3 = new ArrayList<Zip>();
+                myData3 = getData2();
+                int myData3num = myData3.size()-1;
+                getZipForecast(myData3.get(myData3num).getZipString());
+            }
+        });
+
+        mCurrentWeather.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myLoc = new CurrentLocation(MainActivity.this);
+                List <Address> temp = new ArrayList<Address>();
+                if (myLoc.isCanGetLocation()){
+                    myLoc.getLocation();
+                    try {
+                        temp = geocoder.getFromLocation(myLoc.getLatitude(),myLoc.getLongitude(), 4);
+                    } catch (IOException e) {
+
+                    }
+                    try {
+                        mLocationLabel.setText(temp.get(0).getLocality() + ", " + temp.get(0).getAdminArea());
+                        //mLocationLabel.setText(temp.get(0).getAddressLine(0));
+                    } catch (Exception e) {
+
+                    }
+
+                    getForecast(myLoc.getLatitude(), myLoc.getLongitude());
+                    System.out.println(myLoc.getLatitude()+"     myloc: "+myLoc.getLongitude());
+                }
+                else{
+                    myLoc.isGPSon();
+                }
             }
         });
 
