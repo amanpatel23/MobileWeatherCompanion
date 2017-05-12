@@ -59,63 +59,80 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
-        app:srcCompat="@drawable/clear_day"
+        app:srcCompat="@drawable/ic_day"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_above="@+id/location_label" />
 
-    <ImageView
-        android:id="@+id/refresh_imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/progressBar"
-        android:layout_alignParentBottom="true"
-        android:layout_alignStart="@+id/progressBar"
-        android:layout_marginBottom="25dp"
-        app:srcCompat="@drawable/refresh" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editZip"
-        android:layout_alignStart="@+id/editZip"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_alignBottom="@+id/refresh_imageView"
-        android:layout_below="@+id/editZip" />
-
     <EditText
         android:id="@+id/editZip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/refresh_imageView"
-        android:layout_marginBottom="48dp"
-        android:layout_toLeftOf="@+id/degree_imageView"
-        android:layout_toStartOf="@+id/degree_imageView"
         android:ems="10"
         android:inputType="textPersonName"
-        android:hint="Enter Location" />
+        android:hint="Enter Location"
+        android:layout_marginTop="70dp"
+        android:layout_below="@+id/time_label"
+        android:layout_alignRight="@+id/temp_label"
+        android:layout_alignEnd="@+id/temp_label" />
 
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/editZip"
-        android:layout_toEndOf="@+id/temp_label"
-        android:layout_toRightOf="@+id/temp_label"
-        android:text="Change" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@+id/editZip"
+        android:orientation="horizontal"
+        android:layout_alignTop="@+id/editZip"
+        android:layout_alignBottom="@+id/editZip">
 
-    <Button
-        android:id="@+id/dailyButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/progressBar"
-        android:layout_alignLeft="@+id/button2"
-        android:layout_alignStart="@+id/button2"
-        android:text="7 Day" />
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="44dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/editZip"
+            android:layout_toEndOf="@+id/location_label"
+            android:layout_toRightOf="@+id/location_label"
+            android:background="@drawable/ic_done_black_24dp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_alignTop="@+id/refresh_imageView"
+        android:id="@+id/linearLayout"
+        android:layout_toRightOf="@+id/space"
+        android:layout_toEndOf="@+id/space">
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2.25" />
+
+        <Button
+            android:id="@+id/currentWeather"
+            android:layout_width="41dp"
+            android:layout_height="36dp"
+            android:layout_alignEnd="@+id/percipChance"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/percipChance"
+            android:background="@drawable/ic_my_location_" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.59" />
+
+        <Button
+            android:id="@+id/dailyButton"
+            android:layout_width="47dp"
+            android:layout_height="28dp"
+            android:layout_alignEnd="@+id/button2"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/button2"
+            android:layout_alignTop="@+id/refresh_imageView"
+            android:background="@drawable/ic_7" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/summary_label"
@@ -137,15 +154,28 @@
         android:text="50%"
         android:textSize="20sp" />
 
-    <Button
-        android:id="@+id/currentWeather"
+    <ImageView
+        android:id="@+id/refresh_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/dailyButton"
-        android:layout_alignBottom="@+id/dailyButton"
-        android:layout_alignEnd="@+id/location_label"
-        android:layout_alignRight="@+id/location_label"
-        android:text="Current Location"
-        tools:text="Current Location" />
+        android:layout_weight="1"
+        app:srcCompat="@drawable/refresh"
+        android:layout_marginBottom="12dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_alignBottom="@+id/refresh_imageView"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/linearLayout"
+        android:layout_alignRight="@+id/refresh_imageView"
+        android:layout_alignEnd="@+id/refresh_imageView" />
 
 </RelativeLayout>

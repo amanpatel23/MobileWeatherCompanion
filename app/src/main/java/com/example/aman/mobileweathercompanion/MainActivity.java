@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final String zip = meditZip.getText().toString();
-
+                meditZip.setText("");
                 try {
                     List<Address> addresses = geocoder.getFromLocationName(zip, 1);
                     if (addresses != null && !addresses.isEmpty()) {

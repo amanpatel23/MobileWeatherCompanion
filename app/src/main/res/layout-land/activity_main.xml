@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_blue_dark"
+    android:background="@drawable/warm"
+    android:id = "@+id/rLayout"
     tools:context="com.example.aman.mobileweathercompanion.MainActivity"
     tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="0dp">
@@ -16,18 +17,21 @@
         android:gravity="center"
         android:text="100"
         android:textSize="68sp"
+        tools:layout_editor_absoluteX="119dp"
+        tools:layout_editor_absoluteY="270dp"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/editZip"
-        android:layout_toEndOf="@+id/editZip" />
+        android:layout_centerHorizontal="true" />
 
     <ImageView
         android:id="@+id/degree_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/degree"
-        android:layout_alignTop="@+id/temp_label"
+        android:layout_alignEnd="@+id/temp_label"
         android:layout_alignRight="@+id/temp_label"
-        android:layout_alignEnd="@+id/temp_label" />
+        android:layout_alignTop="@+id/temp_label"
+        app:srcCompat="@drawable/degree"
+        tools:layout_editor_absoluteX="249dp"
+        tools:layout_editor_absoluteY="270dp" />
 
     <TextView
         android:id="@+id/time_label"
@@ -35,8 +39,9 @@
         android:layout_height="wrap_content"
         android:text="5:00 PM"
         android:textSize="18sp"
-        android:layout_below="@+id/location_label"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/summary_label"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="21dp" />
 
     <TextView
         android:id="@+id/location_label"
@@ -44,70 +49,127 @@
         android:layout_height="wrap_content"
         android:text="Towson, MD"
         android:textSize="24sp"
-        android:layout_below="@+id/icon_imageView"
-        android:layout_alignRight="@+id/temp_label"
-        android:layout_alignEnd="@+id/temp_label"
-        android:layout_alignLeft="@+id/temp_label"
-        android:layout_alignStart="@+id/temp_label" />
+        android:layout_above="@+id/degree_imageView"
+        android:layout_centerHorizontal="true" />
 
     <ImageView
         android:id="@+id/icon_imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        app:srcCompat="@drawable/ic_day"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/location_label" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_alignTop="@+id/refresh_imageView"
+        android:id="@+id/linearLayout"
+        android:layout_toRightOf="@+id/space"
+        android:layout_toEndOf="@+id/space">
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.48" />
+
+        <EditText
+            android:id="@+id/editZip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/linearLayout"
+            android:layout_toLeftOf="@+id/linearLayout2"
+            android:layout_toStartOf="@+id/linearLayout2"
+            android:ems="10"
+            android:hint="Enter Location"
+            android:inputType="textPersonName" />
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="51dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/editZip"
+            android:layout_toEndOf="@+id/location_label"
+            android:layout_toRightOf="@+id/location_label"
+            android:background="@drawable/ic_done_black_24dp" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.41" />
+
+        <Button
+            android:id="@+id/currentWeather"
+            android:layout_width="41dp"
+            android:layout_height="36dp"
+            android:layout_alignEnd="@+id/percipChance"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/percipChance"
+            android:background="@drawable/ic_my_location_"
+            android:layout_weight="0.01" />
+
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.48" />
+
+        <Button
+            android:id="@+id/dailyButton"
+            android:layout_width="47dp"
+            android:layout_height="28dp"
+            android:layout_alignEnd="@+id/button2"
+            android:layout_alignParentBottom="true"
+            android:layout_alignRight="@+id/button2"
+            android:layout_alignTop="@+id/refresh_imageView"
+            android:background="@drawable/ic_7" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/summary_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/clear_day"
-        android:layout_alignBottom="@+id/progressBar"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/temp_label"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="11dp"
+        android:text="Clear"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/percipChance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="50%"
+        android:textSize="20sp" />
 
     <ImageView
         android:id="@+id/refresh_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/refresh" />
+        android:layout_weight="1"
+        app:srcCompat="@drawable/refresh"
+        android:layout_marginBottom="12dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <ProgressBar
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_weight="1"
+        android:layout_alignBottom="@+id/refresh_imageView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignBottom="@+id/refresh_imageView"
+        android:layout_alignTop="@+id/linearLayout"
         android:layout_alignRight="@+id/refresh_imageView"
         android:layout_alignEnd="@+id/refresh_imageView" />
-
-    <EditText
-        android:id="@+id/editZip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Enter Zip Code"
-        android:layout_marginBottom="22dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginLeft="18dp"
-        android:layout_marginStart="18dp" />
-
-    <Button
-        android:id="@+id/button2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        android:layout_alignBottom="@+id/editZip"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:id="@+id/dailyButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="7 Day"
-        android:layout_marginRight="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_alignBaseline="@+id/button2"
-        android:layout_alignBottom="@+id/button2"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>
