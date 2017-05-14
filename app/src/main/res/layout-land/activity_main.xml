@@ -109,11 +109,11 @@
 
         <Button
             android:id="@+id/saveButton"
-            android:layout_width="62dp"
+            android:layout_width="48dp"
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/summary_label"
             android:layout_alignStart="@+id/summary_label"
-            android:background="@drawable/ic_save_black_24dp" />
+            android:background="@drawable/ic_archive_black_24dp" />
 
         <Space
             android:layout_width="wrap_content"
@@ -127,8 +127,8 @@
             android:layout_alignEnd="@+id/percipChance"
             android:layout_alignParentBottom="true"
             android:layout_alignRight="@+id/percipChance"
-            android:background="@drawable/ic_my_location_"
-            android:layout_weight="0.01" />
+            android:layout_weight="0.01"
+            android:background="@drawable/ic_location_on_black_24dp" />
 
         <Space
             android:layout_width="wrap_content"
