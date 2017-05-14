@@ -5,7 +5,7 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.example.aman.mobileweathercompanion"
-        minSdkVersion 16
+        minSdkVersion 23
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -33,4 +33,6 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     testCompile 'junit:junit:4.12'
     compile files('libs/svg-android-1.1.jar')
+    compile 'com.google.android.gms:play-services-maps:10.2.4'
+    compile 'com.google.android.gms:play-services:10.2.4'
 }

@@ -26,7 +26,7 @@ public class DayAdapter extends RecyclerView.Adapter<DayAdapter.DayViewHolder>{
     public DayViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.card ,parent ,false);
-        DayViewHolder viewHolder = new DayViewHolder(view);
+        DayViewHolder viewHolder = new  DayViewHolder(view);
         return viewHolder;
     }
 

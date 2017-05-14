@@ -2,6 +2,7 @@ package com.example.aman.mobileweathercompanion;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -10,7 +11,10 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.Manifest;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,6 +33,7 @@ import com.example.aman.mobileweathercompanion.data.ZipDb;
 import com.example.aman.mobileweathercompanion.weather.CurrentWeather;
 import com.example.aman.mobileweathercompanion.weather.Day;
 import com.example.aman.mobileweathercompanion.weather.Forecast;
+import com.example.aman.mobileweathercompanion.data.mwcPermissions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -56,6 +61,12 @@ public class MainActivity extends AppCompatActivity {
     public static final String DAILY_FORECAST = "DAILY_FORECAST";
     private Forecast mForecast;
     private CurrentLocation myLoc;
+    private static final int MY_PERMISSIONS_REQUEST = 1;
+    private static final int FINE_LOCATION_PERMISSION = 101;
+    private static final int COARSE_LOCATION_PERMISSION = 102;
+    private boolean permissionGrant = false;
+    private int TempLongtitude = 0;
+    private int TempLatitude = 0;
 
     @BindView(R.id.rLayout) RelativeLayout relativeLayout;
     @BindView(R.id.time_label) TextView mTimeLabel;
@@ -69,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.button2) Button zipButton;
     @BindView(R.id.percipChance) TextView mPercipChance;
     @BindView(R.id.currentWeather) Button mCurrentWeather;
+    @BindView(R.id.saveButton) Button mSaveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,13 +132,25 @@ public class MainActivity extends AppCompatActivity {
         mCurrentWeather.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+               // myLoc.isGPSon();
                 myLoc = new CurrentLocation(MainActivity.this);
+                //myPermission = new mwcPermissions(MainActivity.this);
+                havePermission3();
                 List <Address> temp = new ArrayList<Address>();
+                //myLoc.havePermission2();
+                //myLoc.havePermission();
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, FINE_LOCATION_PERMISSION);
+                } else {
+                    permissionGrant = (true);
+                }
                 if (myLoc.isCanGetLocation()){
                     myLoc.getLocation();
                     try {
                         temp = geocoder.getFromLocation(myLoc.getLatitude(),myLoc.getLongitude(), 4);
-                    } catch (IOException e) {
+                    }
+                    catch (IOException e) {
 
                     }
                     try {
@@ -137,10 +161,14 @@ public class MainActivity extends AppCompatActivity {
                     }
 
                     getForecast(myLoc.getLatitude(), myLoc.getLongitude());
-                    System.out.println(myLoc.getLatitude()+"     myloc: "+myLoc.getLongitude());
+                    String zipDBString = (temp.get(0).getLocality() + " " + temp.get(0).getAdminArea());
+
                 }
                 else{
                     myLoc.isGPSon();
+                    //myLoc.havePermission2();
+                    //myLoc.havePermission();
+
                 }
             }
         });
@@ -170,7 +198,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
-
         mSummaryLabel.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -432,6 +459,50 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(DAILY_FORECAST, mForecast.getDailyForecast());
         startActivity(intent);
     }
+
+    public void havePermission3(){
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},FINE_LOCATION_PERMISSION);
+
+            return;
+        }
+
+
+
+    }
+
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case FINE_LOCATION_PERMISSION:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    permissionGrant = true;
+                } else {
+                    permissionGrant = false;
+                    Toast.makeText(getApplicationContext(), "The button you clicked requires location services", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case COARSE_LOCATION_PERMISSION:
+                // do something for coarse location
+                break;
+
+        }
+    }
+
+    public String getZipString(double lat, double lon){
+        List <Address> temp = new ArrayList<Address>();
+        final Geocoder geocoder = new Geocoder(this);
+        try {
+            temp = geocoder.getFromLocation(lat, lon, 4);
+        } catch (IOException e) {
+
+        }
+        String zipDBString = (temp.get(0).getLocality() + " " + temp.get(0).getAdminArea());
+        return zipDBString;
+    }
+
 
 
 }
