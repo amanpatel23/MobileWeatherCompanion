@@ -77,6 +77,7 @@ public class ZipDb extends SQLiteOpenHelper {
 
             }
         }
+        recordSet.close();
         db.close();
         temp = new Zip(zip);
         return temp;
@@ -107,9 +108,9 @@ public class ZipDb extends SQLiteOpenHelper {
                 Zip = recordSet.getString(recordSet.getColumnIndex("zip"));
                 try {
                     temp = new Zip(Zip);
-                    if(!(contains2(re, temp))) {
+                    //if(!(contains2(re, temp))) {
                         re.add(temp);
-                    }
+                   // }
 
                 }
                 catch (Exception e){
@@ -118,6 +119,7 @@ public class ZipDb extends SQLiteOpenHelper {
             }
             recordSet.moveToNext();
         }
+        recordSet.close();
         /*if (!recordSet.isAfterLast()) {
             if (recordSet.getString(recordSet.getColumnIndex("Longitude")) != null) {
                 lon = recordSet.getString(recordSet.getColumnIndex("Longitude"));
@@ -133,6 +135,7 @@ public class ZipDb extends SQLiteOpenHelper {
         temp.setLongitude(Double.parseDouble(lon));
         temp.setLatitude(Double.parseDouble(lat));
         return temp;*/
+
         db.close();
         return re;
     }

@@ -1,5 +1,6 @@
 package com.example.aman.mobileweathercompanion;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -17,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.Manifest;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -34,6 +36,7 @@ import com.example.aman.mobileweathercompanion.weather.CurrentWeather;
 import com.example.aman.mobileweathercompanion.weather.Day;
 import com.example.aman.mobileweathercompanion.weather.Forecast;
 import com.example.aman.mobileweathercompanion.data.mwcPermissions;
+import com.example.aman.mobileweathercompanion.data.myUtility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -67,6 +70,9 @@ public class MainActivity extends AppCompatActivity {
     private boolean permissionGrant = false;
     private double TempLongtitude = 0;
     private double TempLatitude = 0;
+    static final String stringLong = "longitude";
+    static final String stringLat="latitude";
+    static Activity myAct = null;
 
     @BindView(R.id.rLayout) RelativeLayout relativeLayout;
     @BindView(R.id.time_label) TextView mTimeLabel;
@@ -98,7 +104,8 @@ public class MainActivity extends AppCompatActivity {
         final double[] latitude = {39.3938};
         final double[] longitude = {-76.6092};
 
-        getForecast(latitude[0],longitude[0]);
+        //getForecast(latitude[0],longitude[0]);
+        myAct = this;
 
         ArrayList<LongLat> myData = new ArrayList<LongLat>();
         ArrayList<Zip> myData2 = new ArrayList<Zip>();
@@ -106,16 +113,22 @@ public class MainActivity extends AppCompatActivity {
         myData2 = getData2();
         int myData2num = myData2.size()-1;
 
-        try{
+        /*try{
             getForecast((myData.get(myData.size()-1).getLongitude()),(myData.get(myData.size()-1)).getLatitude());
         }
         catch (Exception e){
-
-
         }
-        try {
-            getZipForecast(myData2.get(myData2num).getZipString());
+        */
 
+        try {
+            if(savedInstanceState != null){
+                TempLongtitude = savedInstanceState.getDouble("stringLong");
+                TempLatitude = savedInstanceState.getDouble("stringLat");
+                getForecast(TempLatitude, TempLongtitude);
+            }
+            else {
+                getZipForecast(myData2.get(myData2num).getZipString());
+            }
         }
         catch(Exception e){
 
@@ -125,7 +138,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick (View v) {
                 String dbString = getZipString(TempLatitude, TempLongtitude);
-                setDb2(dbString);
+                try{
+                    setDb2(dbString);
+                    showMsg();
+                }
+                catch (Exception  e){
+                    showMsg2();
+
+                }
+
             }
         });
 
@@ -138,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
                 ArrayList<Zip> myData3 = new ArrayList<Zip>();
                 myData3 = getData2();
                 int myData3num = myData3.size()-1;
+                System.out.println("Size: "+myData3.size());
                 getZipForecast(myData3.get(myData3num).getZipString());
             }
         });
@@ -207,11 +229,15 @@ public class MainActivity extends AppCompatActivity {
                         mLocationLabel.setText(addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
                         TempLatitude = address.getLatitude();
                         TempLongtitude = address.getLongitude();
+                        myUtility.hideKeyboard(MainActivity.this);
+
+
                     }
                 } catch (IOException e) {
 
                 }
             }
+
 
         });
         mSummaryLabel.setOnClickListener(new OnClickListener() {
@@ -247,6 +273,18 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+    /*@Override
+    protected void onPause() {
+        super.onPause();
+        if (permissionGrant){
+            myLoc = new CurrentLocation(MainActivity.this);
+            getForecast(myLoc.getLatitude(), myLoc.getLongitude());
+            TempLatitude  = myLoc.getLatitude(); TempLongtitude = myLoc.getLongitude();
+        }
+        else{
+            getForecast(TempLatitude, TempLongtitude);
+        }
+    }
 
     @Override
     protected void onResume() {
@@ -267,23 +305,27 @@ public class MainActivity extends AppCompatActivity {
             TempLatitude  = myLoc.getLatitude(); TempLongtitude = myLoc.getLongitude();
         }
     }
+    */
 
     public void setDb (double latitude, double longitude){
         LongLatDB db = new LongLatDB(this, null, null, 1);
         LongLat temp = new LongLat(longitude, latitude);
         db.addCord(temp);
+        db.close();
     }
 
     public void setDb2 (String zip){
         ZipDb db = new ZipDb(this, null, null, 1);
         Zip temp = new Zip(zip);
         db.addCord(temp);
+        db.close();
     }
 
     public ArrayList<LongLat> getData(){
         LongLatDB db = new LongLatDB(this, null, null, 1);
         ArrayList <LongLat> da = new ArrayList<LongLat>();
         da = db.getData();
+        db.close();
 
         return da;
     }
@@ -292,6 +334,7 @@ public class MainActivity extends AppCompatActivity {
         ZipDb db = new ZipDb(this, null, null, 1);
         ArrayList <Zip> da = new ArrayList<Zip>();
         da = db.getData();
+        db.close();
 
         return da;
     }
@@ -530,18 +573,38 @@ public class MainActivity extends AppCompatActivity {
 
     public String getZipString(double lat, double lon){
         List <Address> temp = new ArrayList<Address>();
+        String zipDBString ="";
         final Geocoder geocoder = new Geocoder(this);
         try {
             temp = geocoder.getFromLocation(lat, lon, 4);
         } catch (IOException e) {
 
         }
-        String zipDBString = (temp.get(0).getLocality() + " " + temp.get(0).getAdminArea());
-        return zipDBString;
+        try {
+            zipDBString = (temp.get(0).getLocality() + " " + temp.get(0).getAdminArea());
+            return zipDBString;
+        }
+        catch (IndexOutOfBoundsException e ){
+            return null;
+        }
+
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putDouble(stringLong, TempLongtitude);
+        outState.putDouble(stringLat, TempLatitude);
+        super.onSaveInstanceState(outState);
 
+    }
 
+    public static void showMsg()
+    {
+        Toast.makeText(myAct.getApplicationContext(), "Location Saved", Toast.LENGTH_LONG).show();
+    }
 
-
+    public static void showMsg2()
+    {
+        Toast.makeText(myAct.getApplicationContext(), "Nothing to be saved!", Toast.LENGTH_LONG).show();
+    }
 }

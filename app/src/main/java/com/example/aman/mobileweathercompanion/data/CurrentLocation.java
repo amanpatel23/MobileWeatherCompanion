@@ -65,7 +65,7 @@ public class CurrentLocation extends Service implements LocationListener {
                     if (loc != null) {
                         latitude = loc.getLatitude();
                         longitude = loc.getLongitude();
-                        System.out.println(latitude +"............."+ longitude);
+                        //System.out.println(latitude +"............."+ longitude);
                     }
                 }
                 catch(SecurityException e){
@@ -84,7 +84,7 @@ public class CurrentLocation extends Service implements LocationListener {
                         if (loc != null) {
                             latitude = loc.getLatitude();
                             longitude = loc.getLongitude();
-                            System.out.println(latitude +"........2....."+ longitude);
+                            //System.out.println(latitude +"........2....."+ longitude);
                         }
                     }
                 } catch (SecurityException e) {
