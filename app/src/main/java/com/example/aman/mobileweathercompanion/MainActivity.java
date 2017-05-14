@@ -65,8 +65,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int FINE_LOCATION_PERMISSION = 101;
     private static final int COARSE_LOCATION_PERMISSION = 102;
     private boolean permissionGrant = false;
-    private int TempLongtitude = 0;
-    private int TempLatitude = 0;
+    private double TempLongtitude = 0;
+    private double TempLatitude = 0;
 
     @BindView(R.id.rLayout) RelativeLayout relativeLayout;
     @BindView(R.id.time_label) TextView mTimeLabel;
@@ -81,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.percipChance) TextView mPercipChance;
     @BindView(R.id.currentWeather) Button mCurrentWeather;
     @BindView(R.id.saveButton) Button mSaveButton;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         }
         catch (Exception e){
 
+
         }
         try {
             getZipForecast(myData2.get(myData2num).getZipString());
@@ -117,6 +120,16 @@ public class MainActivity extends AppCompatActivity {
         catch(Exception e){
 
         }
+
+        mSaveButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick (View v) {
+                String dbString = getZipString(TempLatitude, TempLongtitude);
+                setDb2(dbString);
+            }
+        });
+
+
 
         mRefreshImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,6 +162,10 @@ public class MainActivity extends AppCompatActivity {
                     myLoc.getLocation();
                     try {
                         temp = geocoder.getFromLocation(myLoc.getLatitude(),myLoc.getLongitude(), 4);
+                        getForecast(myLoc.getLatitude(), myLoc.getLongitude());
+                        TempLatitude = myLoc.getLatitude();
+                        TempLongtitude = myLoc.getLongitude();
+                        //String zipDBString = (temp.get(0).getLocality() + " " + temp.get(0).getAdminArea());
                     }
                     catch (IOException e) {
 
@@ -160,8 +177,6 @@ public class MainActivity extends AppCompatActivity {
 
                     }
 
-                    getForecast(myLoc.getLatitude(), myLoc.getLongitude());
-                    String zipDBString = (temp.get(0).getLocality() + " " + temp.get(0).getAdminArea());
 
                 }
                 else{
@@ -190,7 +205,8 @@ public class MainActivity extends AppCompatActivity {
                         longitude[0] = address.getLongitude();
                         getForecast(address.getLatitude(),address.getLongitude());
                         mLocationLabel.setText(addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
-                        setDb2(zip);
+                        TempLatitude = address.getLatitude();
+                        TempLongtitude = address.getLongitude();
                     }
                 } catch (IOException e) {
 
@@ -231,6 +247,27 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (permissionGrant) {
+            myLoc = new CurrentLocation(MainActivity.this);
+            getForecast(myLoc.getLatitude(), myLoc.getLongitude());
+            TempLatitude  = myLoc.getLatitude(); TempLongtitude = myLoc.getLongitude();
+        }
+    }
+
+    @Override
+    protected  void onStart(){
+        super.onStart();
+        if (permissionGrant) {
+            myLoc = new CurrentLocation(MainActivity.this);
+            getForecast(myLoc.getLatitude(), myLoc.getLongitude());
+            TempLatitude  = myLoc.getLatitude(); TempLongtitude = myLoc.getLongitude();
+        }
+    }
+
     public void setDb (double latitude, double longitude){
         LongLatDB db = new LongLatDB(this, null, null, 1);
         LongLat temp = new LongLat(longitude, latitude);
@@ -502,6 +539,8 @@ public class MainActivity extends AppCompatActivity {
         String zipDBString = (temp.get(0).getLocality() + " " + temp.get(0).getAdminArea());
         return zipDBString;
     }
+
+
 
 
 
