@@ -1,5 +1,6 @@
 package com.example.aman.mobileweathercompanion;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,12 +14,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.Manifest;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -32,11 +30,10 @@ import com.example.aman.mobileweathercompanion.data.LongLat;
 import com.example.aman.mobileweathercompanion.data.LongLatDB;
 import com.example.aman.mobileweathercompanion.data.Zip;
 import com.example.aman.mobileweathercompanion.data.ZipDb;
+import com.example.aman.mobileweathercompanion.data.myUtility;
 import com.example.aman.mobileweathercompanion.weather.CurrentWeather;
 import com.example.aman.mobileweathercompanion.weather.Day;
 import com.example.aman.mobileweathercompanion.weather.Forecast;
-import com.example.aman.mobileweathercompanion.data.mwcPermissions;
-import com.example.aman.mobileweathercompanion.data.myUtility;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -131,7 +128,9 @@ public class MainActivity extends AppCompatActivity {
                 mLocationLabel.setText(getZipString(TempLatitude2, TempLongtitude2));
             }
             else {
-                getZipForecast(myData2.get(myData2num).getZipString());
+                Zip z = new Zip(myData2.get(myData2num).getZipString());
+                zipFore(z.getZipString());
+
             }
         }
         catch(Exception e){
@@ -357,6 +356,24 @@ public class MainActivity extends AppCompatActivity {
                         address.getLatitude(), address.getLongitude());
                 latitude[0] = address.getLatitude();
                 longitude[0] = address.getLongitude();
+                getForecast(address.getLatitude(),address.getLongitude());
+                mLocationLabel.setText(addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
+            }
+        } catch (IOException e) {
+
+        }
+    }
+
+    public void zipFore(String zip) {
+        final Geocoder geocoder = new Geocoder(this);
+        try {
+            List<Address> addresses = geocoder.getFromLocationName(zip, 1);
+            if (addresses != null && !addresses.isEmpty()) {
+                Address address = addresses.get(0);
+                String message = String.format("Latitude: %f, Longitude: %f",
+                        address.getLatitude(), address.getLongitude());
+                TempLatitude = address.getLatitude();
+                TempLongtitude = address.getLongitude();
                 getForecast(address.getLatitude(),address.getLongitude());
                 mLocationLabel.setText(addresses.get(0).getLocality() + ", " + addresses.get(0).getAdminArea());
             }
@@ -602,8 +619,6 @@ public class MainActivity extends AppCompatActivity {
         outState.putDouble("TempLatitude", TempLatitude);
         outState.putDouble("stringLong", TempLongtitude);
         outState.putDouble("stringLat", TempLatitude);
-
-
     }
 
     @Override
