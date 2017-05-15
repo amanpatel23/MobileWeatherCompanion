@@ -8,6 +8,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.aman.mobileweathercompanion.data.Zip;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,8 +17,11 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
+import java.util.ArrayList;
+
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -72,8 +77,63 @@ public class MainActivityTest {
     }
 
 
+    public void getzip () throws Exception {
+        MainActivity activity = Robolectric.setupActivity(MainActivity.class);
+        ImageView icon = (ImageView) activity.findViewById(R.id.icon_imageView);
+        TextView zip = (TextView) activity.findViewById(R.id.editZip);
+        zip.setText("21117");
+        Button zB = (Button) activity.findViewById(R.id.button2);
+        zB.performClick();
+        assertThat(zip.getText().toString(), equalTo("21117"));
+
+    }
+
+    public void getzip2 () throws Exception {
+        MainActivity activity = Robolectric.setupActivity(MainActivity.class);
+        ImageView icon = (ImageView) activity.findViewById(R.id.icon_imageView);
+        TextView zip = (TextView) activity.findViewById(R.id.editZip);
+        TextView loc = (TextView) activity.findViewById(R.id.location_label);
+        zip.setText("21117");
+        Button zB = (Button) activity.findViewById(R.id.button2);
+        zB.performClick();
+        assertThat(loc.getText().toString(), containsString("Owings") );
+
+    }
+
+    public void dbReturn () throws Exception {
+        MainActivity activity = Robolectric.setupActivity(MainActivity.class);
+        ImageView icon = (ImageView) activity.findViewById(R.id.icon_imageView);
+        TextView zip = (TextView) activity.findViewById(R.id.editZip);
+        TextView loc = (TextView) activity.findViewById(R.id.location_label);
+        zip.setText("21117");
+        Button zB = (Button) activity.findViewById(R.id.button2);
+        Button save = (Button) activity.findViewById(R.id.saveButton);
+        zB.performClick();
+        save.performClick();
+        ArrayList<Zip> temp = new ArrayList<Zip>();
+        temp = activity.getData2();
+        assertThat(loc.getText().toString(), equalTo("21117"));
 
 
+    }
+
+    public void isSaveThere () throws Exception {
+        MainActivity activity = Robolectric.setupActivity(MainActivity.class);
+        ImageView icon = (ImageView) activity.findViewById(R.id.icon_imageView);
+        Button save = (Button) activity.findViewById(R.id.saveButton);
+        assertNotNull(save);
+        assertEquals(save.getVisibility(), true);
+
+    }
+
+    public void isCurrentLocationThere () throws Exception {
+        MainActivity activity = Robolectric.setupActivity(MainActivity.class);
+        ImageView icon = (ImageView) activity.findViewById(R.id.icon_imageView);
+        Button Current = (Button) activity.findViewById(R.id.currentWeather);
+        assertNotNull(Current);
+        assertEquals(Current.getVisibility(), true);
+
+    }
 
 
 }
