@@ -135,5 +135,19 @@ public class MainActivityTest {
 
     }
 
+    public void isSevenDayThere () throws Exception {
+        MainActivity activity = Robolectric.setupActivity(MainActivity.class);
+        Button seven = (Button) activity.findViewById(R.id.dailyButton);
+        assertNotNull(seven);
+        assertEquals(seven.getVisibility(), true);
+    }
+
+    public void isTimeThere () throws Exception {
+        MainActivity activity = Robolectric.setupActivity(MainActivity.class);
+        TextView time = (TextView) activity.findViewById(R.id.time_label);
+        assertNotNull(time);
+        assertEquals(time.getVisibility(), true);
+    }
+
 
 }
