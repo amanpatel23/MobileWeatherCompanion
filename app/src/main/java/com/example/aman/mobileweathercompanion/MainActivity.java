@@ -70,8 +70,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean permissionGrant = false;
     private double TempLongtitude = 0;
     private double TempLatitude = 0;
-    static final String stringLong = "longitude";
-    static final String stringLat="latitude";
+    private double TempLongtitude2 = 0;
+    private double TempLatitude2 = 0;
+    static final String stringLong = "stringLong";
+    static final String stringLat="stringLat";
     static Activity myAct = null;
 
     @BindView(R.id.rLayout) RelativeLayout relativeLayout;
@@ -122,9 +124,11 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             if(savedInstanceState != null){
-                TempLongtitude = savedInstanceState.getDouble("stringLong");
-                TempLatitude = savedInstanceState.getDouble("stringLat");
-                getForecast(TempLatitude, TempLongtitude);
+                TempLongtitude2 = savedInstanceState.getDouble("stringLong");
+                TempLatitude2 = savedInstanceState.getDouble("stringLat");
+                //System.out.println(TempLatitude2+" my temps: "+TempLongtitude2);
+                getForecast(TempLatitude2, TempLongtitude2);
+                mLocationLabel.setText(getZipString(TempLatitude2, TempLongtitude2));
             }
             else {
                 getZipForecast(myData2.get(myData2num).getZipString());
@@ -159,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                 ArrayList<Zip> myData3 = new ArrayList<Zip>();
                 myData3 = getData2();
                 int myData3num = myData3.size()-1;
-                System.out.println("Size: "+myData3.size());
+                //System.out.println("Size: "+myData3.size());
                 getZipForecast(myData3.get(myData3num).getZipString());
             }
         });
@@ -371,6 +375,7 @@ public class MainActivity extends AppCompatActivity {
             OkHttpClient client = new OkHttpClient();
             Request request = new Request.Builder().url(forecastUrl).build();
             Call call = client.newCall(request);
+
 
             call.enqueue(new Callback() {
                 @Override
@@ -592,10 +597,24 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        outState.putDouble(stringLong, TempLongtitude);
-        outState.putDouble(stringLat, TempLatitude);
         super.onSaveInstanceState(outState);
+        outState.putDouble("TempLongtitude", TempLongtitude);
+        outState.putDouble("TempLatitude", TempLatitude);
+        outState.putDouble("stringLong", TempLongtitude);
+        outState.putDouble("stringLat", TempLatitude);
 
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        TempLongtitude = savedInstanceState.getDouble("TempLongtitude");
+        TempLatitude = savedInstanceState.getDouble("TempLatitude");
+        TempLatitude2 = savedInstanceState.getDouble(stringLat);
+        TempLongtitude2 = savedInstanceState.getDouble(stringLong);
+        getForecast(TempLatitude,TempLongtitude);
+        //System.out.println(TempLongtitude2+"............."+TempLatitude2);
     }
 
     public static void showMsg()
